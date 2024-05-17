@@ -4,8 +4,10 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 import NoItems from "../components/NoItems";
 import ListingCard from "../components/Cards/ListingCard";
+import { unstable_noStore as noStore } from "next/cache";
 
 async function getData(userId: string) {
+  noStore();
   const data = await prisma.favorite.findMany({
     where: {
       userId: userId,
@@ -32,7 +34,7 @@ export default async function FavoritesPage() {
   const user = await getUser();
 
   if (!user) return redirect("/");
-  const data = await getData(user?.id);
+  const data = await getData(user.id);
   return (
     <section className="container mx-auto px-5 lg:px-10 mt-10">
       <h2 className="text-3xl font-semibold tracking-tight">Your Favorites</h2>
